@@ -3,12 +3,12 @@ from app.service.neo4j_client import run_query
 
 router = APIRouter()
 
-@router.get("/challenges", tags=["Challenges"])
+@router.get("/challenges", tags=["Graph-Info"])
 def get_all_challenges():
     query = "MATCH (c:Challenge) RETURN c"
     return run_query(query)
 
-@router.get("/challenges/{id}/depends-on")
+@router.get("/challenges/{id}/depends-on", tags=["Graph-Info"])
 def get_challenge_dependencies(id: str, format: str ="list"):
     if format == "tree":
         query = """
@@ -22,7 +22,7 @@ def get_challenge_dependencies(id: str, format: str ="list"):
         """
     return run_query(query, {"id": id})
 
-@router.get("/challenges/{id}/neighbors")
+@router.get("/challenges/{id}/neighbors", tags=["Graph-Info"])
 def get_challenge_neighbors(id: str):
     query = """
     MATCH (c:Challenge {uuid:$id})-[:BUILDS_ON]-(n)

@@ -3,7 +3,7 @@ from app.service.neo4j_client import run_query
 
 router = APIRouter()
 
-@router.get("/graph")
+@router.get("/graph", tags=["Graph-Info"])
 def get_graph():
     query = """
     MATCH (c:Challenge)
@@ -12,7 +12,7 @@ def get_graph():
     """
     return run_query(query)
 
-@router.get("/subgraph")
+@router.get("/subgraph", tags=["Graph-Info"])
 def get_subgraph(start: str, end: str):
     query = """
     MATCH path = shortestPath(
