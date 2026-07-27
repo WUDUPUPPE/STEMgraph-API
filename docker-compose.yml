@@ -1,13 +1,14 @@
 services:
   neo4j:
     image: neo4j:5.11.0
-    ports: 
-      - "7475:7474"
-      - "7688:7687"
+
     environment:
       - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PW}
     volumes:
       - neo4j_data:/data
+    
+    networks:
+      backendnetworks:
 
   stemgraph-api:
     build: .
@@ -20,5 +21,11 @@ services:
     depends_on:
       - neo4j
 
+    networks:
+      backendnetworks:
+
 volumes:
   neo4j_data:
+
+networks:
+  backendnetworks:
