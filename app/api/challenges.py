@@ -4,12 +4,12 @@ from app.service.neo4j_client import run_query
 router = APIRouter()
 
 @router.get("/challenges", tags=["Graph-Info"])
-def get_all_challenges():
+def get_all_challenges() -> dict[str, str]:
     query = "MATCH (c:Challenge) RETURN c"
     return run_query(query)
 
 @router.get("/challenges/{id}/depends-on", tags=["Graph-Info"])
-def get_challenge_dependencies(id: str, format: str ="list"):
+def get_challenge_dependencies(id: str, format: str ="list") -> dict[str, str]:
     if format == "tree":
         query = """
         MATCH (c:Challenge {uuid:$id})-[:BUILDS_ON*]->(dep)
