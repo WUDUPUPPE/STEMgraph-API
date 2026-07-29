@@ -1,12 +1,8 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 from app.api import graph, challenges, keywords, admin
 
-class HealthcheckResponse(BaseModel):
-    status: str
-    message: str
 
-app = FastAPI(title="STEMgraph Challenge API", version="1.0.0")
+app = FastAPI(title="STEMgraph Challenge API", version="1.0.1")
 
 app.include_router(graph.router)
 app.include_router(challenges.router)
@@ -14,7 +10,5 @@ app.include_router(keywords.router)
 app.include_router(admin.router)
 
 @app.get("/healthcheck", tags=["Admin/Health Check"])
-def healthcheck() -> HealthcheckResponse:
-    return HealthcheckResponse(
-        status="ok", message="API is running and connected to Neo4j"
-    )
+def healthcheck() -> dict[str, str]:
+    return {"status": "ok", "message": "API is running and connected to Neo4j"}
