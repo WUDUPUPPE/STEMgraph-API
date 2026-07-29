@@ -1,12 +1,11 @@
 from fastapi import APIRouter
-from typing import Optional
 from pydantic import BaseModel
 from app.service.neo4j_client import run_query
 
 class ChallengesResponse(BaseModel):
     uuid: str
-    title: Optional[str] = None
-    keywords: Optional[list[str]] = []
+    title: str | None = None
+    keywords: list[str] = []
 
 router = APIRouter()
 
