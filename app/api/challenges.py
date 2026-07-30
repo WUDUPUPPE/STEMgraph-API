@@ -5,7 +5,7 @@ from app.service.neo4j_client import run_query
 router = APIRouter()
 
 #Challenges als Listenansicht
-@router.get("/challenges", tags=["Graph-Info"])
+@router.get("/challenges/list", tags=["Graph-Info"])
 def get_all_challenges() -> list[ChallengeListResponse]:
     query = """
     MATCH (c:Challenge) 
@@ -14,7 +14,7 @@ def get_all_challenges() -> list[ChallengeListResponse]:
     return run_query(query)
 
 #Abhängige Challenges als Liste
-@router.get("/challenges/{id}/depends-on", tags=["Graph-Info"])
+@router.get("/challenges/{id}/depends-on/list", tags=["Graph-Info"])
 def get_challenge_dependencies(id: str) -> list[DependencyResponse]:
     query = """
     MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON*]->(dep:Challenge)
@@ -36,27 +36,6 @@ def get_subgraph_list(start: str, end: str) -> list[SubgraphListResponse]:
         node.keywords AS keywords
     """
     return run_query(query, {"start": start, "end": end})
-
-#Abhängige Challenges als Graph
-@router.get("/challenges/{id}/depends-on/graph", tags=["Graph-Info"])
-def get_challenge_dependencies_graph(id: str) -> DependencyGraphResponse:
-    node_query = """
-    MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON*]->(dep:Challenge)
-    RETURN DISTINCT dep.uuid AS UUID, dep.title AS TITLE
-    """
-
-    edge_query = """
-    MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON*]->(a:Challenge)
-    MATCH (a)-[:BUILDS_ON]->(b:Challenge)
-    RETURN DISTINCT a.uuid AS SOURCE, b.uuid AS TARGET
-    """
-
-    nodes = run_query(node_query, {"id": id})
-    edges = run_query(edge_query, {"id": id})
-
-    return {
-        "nodes": nodes, "edges": edges
-    }
 
 #Neighbor Challenges for Pop-Up-Info
 @router.get("/challenges/{id}/neighbors", tags=["Challenges"])
