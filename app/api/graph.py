@@ -43,6 +43,7 @@ def get_challenge_dependencies_graph(id: str) -> DependencyGraphResponse:
         "nodes": nodes, "edges": edges
     }
 
+#Subgraph Path AS Graph
 @router.get("/subgraph/graph", tags=["Graph-Info"])
 def get_subgraph_graph(start: str, end: str) -> SubgraphGraphResponse:
     node_query = """
