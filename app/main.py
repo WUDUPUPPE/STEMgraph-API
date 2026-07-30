@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from app.api import graph, challenges, keywords, admin
+from app.api import graph, keywords, admin, list
 
 class HealthcheckResponse(BaseModel):
     status: str
@@ -9,7 +9,7 @@ class HealthcheckResponse(BaseModel):
 app = FastAPI(title="STEMgraph Challenge API", version="1.0.2")
 
 app.include_router(graph.router)
-app.include_router(challenges.router)
+app.include_router(list.router)
 app.include_router(keywords.router)
 app.include_router(admin.router)
 
