@@ -30,3 +30,8 @@ class NeighborChallenge(BaseModel):
 class NeighborsResponse(BaseModel):
     previous: list[NeighborChallenge] = Field(default_factory=list)
     next: list[NeighborChallenge] = Field(default_factory=list)
+    
+class SubgraphListResponse(BaseModel):
+    uuid: str
+    title: str 
+    keywords: list[str] = Field(default_factory=list)
