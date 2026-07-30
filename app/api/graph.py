@@ -9,7 +9,7 @@ def get_graph():
     query = """
     MATCH (c:Challenge)
     OPTIONAL MATCH (c)-[r:BUILDS_ON]->(dep:Challenge)
-    RETURN c, r, dep
+    RETURN DISTINCT c.uuid AS SOURCE, c.title AS source_TITLE, dep.uuid AS TARGET, dep.title AS target_TITLE
     """
     return run_query(query)
 
