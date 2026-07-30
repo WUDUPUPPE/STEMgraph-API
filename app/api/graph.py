@@ -1,19 +1,28 @@
 from fastapi import APIRouter
-from app.models.schema import SubgraphGraphResponse, DependencyGraphResponse
+from app.models.schema import SubgraphGraphResponse, DependencyGraphResponse, GraphResponse
 from app.service.neo4j_client import run_query
     
 router = APIRouter()
 
+#All Challenges AS Graph
 @router.get("/graph", tags=["Graph-Info"])
-def get_graph():
-    query = """
+def get_graph() -> GraphResponse:
+    nodes_query = """
     MATCH (c:Challenge)
-    OPTIONAL MATCH (c)-[r:BUILDS_ON]->(dep:Challenge)
-    RETURN DISTINCT c.uuid AS SOURCE, c.title AS source_TITLE, dep.uuid AS TARGET, dep.title AS target_TITLE
+    RETURN DISTINCT c.uuid AS uuid, c.title AS title
     """
-    return run_query(query)
 
-#Abhängige Challenges als Graph
+    edges_query = """
+    MATCH (c:Challenge)-[:BUILDS_ON]->(dep:Challenge)
+    RETURN DISTINCT c.uuid AS source, dep.uuid AS target
+    """
+
+    return {
+        "nodes": run_query(nodes_query),
+        "edges": run_query(edges_query),
+    }
+
+#Dependency Challenges AS Graph
 @router.get("/challenges/{id}/depends-on/graph", tags=["Graph-Info"])
 def get_challenge_dependencies_graph(id: str) -> DependencyGraphResponse:
     node_query = """
