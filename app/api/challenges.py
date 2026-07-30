@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.models.schema import ChallengeListResponse, DependencyResponse, DependencyGraphResponse, NeighborsResponse
+from app.models.schema import ChallengeListResponse, DependencyResponse, DependencyGraphResponse, NeighborsResponse, SubgraphListResponse
 from app.service.neo4j_client import run_query
 
 router = APIRouter()
@@ -21,6 +21,21 @@ def get_challenge_dependencies(id: str) -> list[DependencyResponse]:
     RETURN DISTINCT dep.uuid AS UUID, dep.title AS TITLE, dep.keywords AS KEYWORDS
     """
     return run_query(query, {"id": id})
+
+#Challenge Sub-Path als Liste
+@router.get("/subgraph/list", tags=["Graph-Info"])
+def get_subgraph_list(start: str, end: str) -> list[SubgraphListResponse]:
+    query = """
+    MATCH path = shortestPath(
+        (a:Challenge {uuid: $start})-[:BUILDS_ON*]-(b:Challenge {uuid: $end})
+    )
+    UNWIND nodes(path) AS node
+    RETURN DISTINCT
+        node.uuid AS uuid,
+        node.title AS title,
+        node.keywords AS keywords
+    """
+    return run_query(query, {"start": start, "end": end})
 
 #Abhängige Challenges als Graph
 @router.get("/challenges/{id}/depends-on/graph", tags=["Graph-Info"])
