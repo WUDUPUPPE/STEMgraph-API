@@ -5,7 +5,7 @@ from app.service.neo4j_client import run_query
 router = APIRouter()
 
 #Challenges als Listenansicht
-@router.get("/challenges/list", tags=["Graph-Info"])
+@router.get("/challenges/list", tags=["List-Info"])
 def get_all_challenges() -> list[ChallengeListResponse]:
     query = """
     MATCH (c:Challenge) 
@@ -14,7 +14,7 @@ def get_all_challenges() -> list[ChallengeListResponse]:
     return run_query(query)
 
 #Abhängige Challenges als Liste
-@router.get("/challenges/{id}/depends-on/list", tags=["Graph-Info"])
+@router.get("/challenges/{id}/depends-on/list", tags=["List-Info"])
 def get_challenge_dependencies(id: str) -> list[DependencyResponse]:
     query = """
     MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON*]->(dep:Challenge)
@@ -23,7 +23,7 @@ def get_challenge_dependencies(id: str) -> list[DependencyResponse]:
     return run_query(query, {"id": id})
 
 #Challenge Sub-Path als Liste
-@router.get("/subgraph/list", tags=["Graph-Info"])
+@router.get("/subgraph/list", tags=["List-Info"])
 def get_subgraph_list(start: str, end: str) -> list[SubgraphListResponse]:
     query = """
     MATCH path = shortestPath(
@@ -38,7 +38,7 @@ def get_subgraph_list(start: str, end: str) -> list[SubgraphListResponse]:
     return run_query(query, {"start": start, "end": end})
 
 #Neighbor Challenges for Pop-Up-Info
-@router.get("/challenges/{id}/neighbors", tags=["Challenges"])
+@router.get("/challenges/{id}/neighbors", tags=["PopUp-Info"])
 def get_challenge_neighbors(id: str) -> NeighborsResponse:
     previous_query = """
     MATCH (prev:Challenge)-[:BUILDS_ON]->(c:Challenge {uuid: $id})

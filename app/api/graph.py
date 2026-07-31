@@ -24,7 +24,7 @@ def get_graph() -> GraphResponse:
 
 #Dependency Challenges AS Graph
 @router.get("/challenges/{id}/depends-on/graph", tags=["Graph-Info"])
-def get_challenge_dependencies_graph(id: str) -> DependencyGraphResponse:
+def get_graph_dependencies(id: str) -> DependencyGraphResponse:
     node_query = """
     MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON*]->(dep:Challenge)
     RETURN DISTINCT dep.uuid AS UUID, dep.title AS TITLE
@@ -45,7 +45,7 @@ def get_challenge_dependencies_graph(id: str) -> DependencyGraphResponse:
 
 #Subgraph Path AS Graph
 @router.get("/subgraph/graph", tags=["Graph-Info"])
-def get_subgraph_graph(start: str, end: str) -> SubgraphGraphResponse:
+def get_subGraph(start: str, end: str) -> SubgraphGraphResponse:
     node_query = """
     MATCH path = shortestPath(
         (a:Challenge {uuid: $start})-[:BUILDS_ON*]-(b:Challenge {uuid: $end})
