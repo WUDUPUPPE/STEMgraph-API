@@ -70,3 +70,17 @@ class NeighborChallenge(BaseModel):
 class NeighborsResponse(BaseModel):
     previous: list[NeighborChallenge] = Field(default_factory=list)
     next: list[NeighborChallenge] = Field(default_factory=list)
+    
+#Keyword AS Graph
+class KeywordsResponse(BaseModel):
+    uuid: str 
+    keywords: list[str] = Field(default_factory=list)
+    
+#Keyword AS List
+
+
+#Challenges by Keyword AS Graph 
+
+
+#Challenges by Keyword AS List
+
