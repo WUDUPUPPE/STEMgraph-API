@@ -5,8 +5,8 @@ from app.service.neo4j_client import run_query
 router = APIRouter()
 
 #Challenges als Listenansicht
-@router.get("/challenges/list", tags=["List-Info"])
-def get_all_challenges() -> list[ChallengeListResponse]:
+@router.get("/list", tags=["List-Info"])
+def get_list() -> list[ChallengeListResponse]:
     query = """
     MATCH (c:Challenge) 
     RETURN c.uuid AS UUID, c.title AS TITLE, c.keywords AS KEYWORDS, c.author AS AUTHOR, c.firstused AS FIRST USED
@@ -14,8 +14,8 @@ def get_all_challenges() -> list[ChallengeListResponse]:
     return run_query(query)
 
 #Abhängige Challenges als Liste
-@router.get("/challenges/{id}/depends-on/list", tags=["List-Info"])
-def get_challenge_dependencies(id: str) -> list[DependencyResponse]:
+@router.get("/list/challenges/{id}/depends-on", tags=["List-Info"])
+def get_list_dependencies(id: str) -> list[DependencyResponse]:
     query = """
     MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON*]->(dep:Challenge)
     RETURN DISTINCT dep.uuid AS UUID, dep.title AS TITLE, dep.keywords AS KEYWORDS
@@ -23,8 +23,8 @@ def get_challenge_dependencies(id: str) -> list[DependencyResponse]:
     return run_query(query, {"id": id})
 
 #Challenge Sub-Path als Liste
-@router.get("/subgraph/list", tags=["List-Info"])
-def get_subgraph_list(start: str, end: str) -> list[SubgraphListResponse]:
+@router.get("/sublist", tags=["List-Info"])
+def get_sublist(start: str, end: str) -> list[SubgraphListResponse]:
     query = """
     MATCH path = shortestPath(
         (a:Challenge {uuid: $start})-[:BUILDS_ON*]-(b:Challenge {uuid: $end})
