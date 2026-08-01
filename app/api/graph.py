@@ -69,3 +69,8 @@ def get_subGraph(start: str, end: str) -> SubgraphGraphResponse:
         "nodes": nodes,
         "edges": edges
     }
+    
+@router.get("/graph-test", tags=["Graph-Info"])
+def graph_test():
+    test_query = "MATCH (n) RETURN count(n) AS count"
+    return run_query(test_query)
