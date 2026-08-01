@@ -131,8 +131,6 @@ if [[ $# -ne 1 ]]; then
   exit 1                                              # Script beenden, wenn das Argument fehlt
 fi
 
-mkdir -p "$BASE_DIR"                                  # Zielordner anlegen, falls er noch nicht existiert
-
 get_all_challenge "$1"                                # Start mit der übergebenen Challenge-ID
 
 echo # Leerzeile für bessere Lesbarkeit
