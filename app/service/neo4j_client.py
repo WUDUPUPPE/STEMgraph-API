@@ -9,7 +9,9 @@ driver = GraphDatabase.driver(
     auth=(os.getenv("NEO4J_USER"), os.getenv("NEO4J_PW"))
 )
 
+driver.verify_connectivity()
+
 def run_query(query, params=None):
-    with driver.session() as session:
+    with driver.session(database=os.getenv("NEO4J_DB", "neo4j")) as session:
         result = session.run(query, params or {})
         return [record.data() for record in result]
