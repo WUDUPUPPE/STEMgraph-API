@@ -9,7 +9,7 @@ router = APIRouter()
 def get_list() -> list[ChallengeListResponse]:
     query = """
     MATCH (c:Challenge) 
-    RETURN c.uuid AS UUID, c.title AS TITLE, c.keywords AS KEYWORDS, c.author AS AUTHOR, c.firstused AS FIRST USED
+    RETURN c.uuid AS uuid, c.title AS title, c.keywords AS keywords, c.author AS author, c.firstused AS firstused
     """
     return run_query(query)
 
@@ -18,7 +18,7 @@ def get_list() -> list[ChallengeListResponse]:
 def get_list_dependencies(id: str) -> list[DependencyResponse]:
     query = """
     MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON*]->(dep:Challenge)
-    RETURN DISTINCT dep.uuid AS UUID, dep.title AS TITLE, dep.keywords AS KEYWORDS
+    RETURN DISTINCT dep.uuid AS uuid, dep.title AS title, dep.keywords AS keywords
     """
     return run_query(query, {"id": id})
 
@@ -30,10 +30,7 @@ def get_sublist(start: str, end: str) -> list[SubgraphListResponse]:
         (a:Challenge {uuid: $start})-[:BUILDS_ON*]-(b:Challenge {uuid: $end})
     )
     UNWIND nodes(path) AS node
-    RETURN DISTINCT
-        node.uuid AS uuid,
-        node.title AS title,
-        node.keywords AS keywords
+    RETURN DISTINCT node.uuid AS uuid, node.title AS title, node.keywords AS keywords
     """
     return run_query(query, {"start": start, "end": end})
 
@@ -42,13 +39,13 @@ def get_sublist(start: str, end: str) -> list[SubgraphListResponse]:
 def get_challenge_neighbors(id: str) -> NeighborsResponse:
     previous_query = """
     MATCH (prev:Challenge)-[:BUILDS_ON]->(c:Challenge {uuid: $id})
-    RETURN prev.uuid AS UUID, prev.title AS TITLE, prev.keywords AS KEYWORDS
+    RETURN prev.uuid AS uuid, prev.title AS title, prev.keywords AS keywords
     ORDER BY prev.title
     """
 
     next_query = """
     MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON]->(next:Challenge)
-    RETURN next.uuid AS UUID, next.title AS TITLE, next.keywords AS KEYWORDS
+    RETURN next.uuid AS uuid, next.title AS title, next.keywords AS keywords
     ORDER BY next.title
     """
 
