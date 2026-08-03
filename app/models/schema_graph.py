@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 #All Challenges AS Graph
 class Node(BaseModel):
