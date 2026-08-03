@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Query
-from app.models.schema import KeywordsResponse 
+from app.models.schema_keywords import KeywordsResponse 
 from app.service.neo4j_client import run_query
     
 router = APIRouter()
