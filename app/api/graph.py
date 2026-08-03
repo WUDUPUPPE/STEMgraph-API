@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.models.schema import SubgraphGraphResponse, DependencyGraphResponse, GraphResponse
+from app.models.schema_graph import SubgraphGraphResponse, DependencyGraphResponse, GraphResponse
 from app.service.neo4j_client import run_query
     
 router = APIRouter()
