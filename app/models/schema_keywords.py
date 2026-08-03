@@ -1,6 +1,40 @@
 from pydantic import BaseModel, Field
 
-#Keyword AS Graph
-class KeywordsResponse(BaseModel):
-    uuid: str 
+#Keywords AS List
+class KeywordListResponse(BaseModel):
     keywords: list[str] = Field(default_factory=list)
+
+#Challenges by Keyword AS List
+class ChallengeByKeywordListItem(BaseModel):
+    uuid: str
+    title: str | None = None
+    keywords: list[str] = Field(default_factory=list)
+
+class ChallengesByKeywordListResponse(BaseModel):
+    items: list[ChallengeByKeywordListItem] = Field(default_factory=list)
+
+#Keywords AS Graph
+class KeywordNode(BaseModel):
+    keyword: str
+
+class KeywordEdge(BaseModel):
+    keyword: str
+    challenge_uuid: str
+
+class KeywordGraphResponse(BaseModel):
+    nodes: list[KeywordNode] = Field(default_factory=list)
+    edges: list[KeywordEdge] = Field(default_factory=list)
+    
+#Challenges by Keyword AS Graph
+class ChallengeNode(BaseModel):
+    uuid: str
+    title: str | None = None
+    keywords: list[str] = Field(default_factory=list)
+
+class ChallengeEdge(BaseModel):
+    source: str  # uuid
+    target: str  # uuid
+
+class ChallengesByKeywordGraphResponse(BaseModel):
+    nodes: list[ChallengeNode] = Field(default_factory=list)
+    edges: list[ChallengeEdge] = Field(default_factory=list)
