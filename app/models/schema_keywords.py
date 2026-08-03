@@ -32,8 +32,8 @@ class ChallengeNode(BaseModel):
     keywords: list[str] = Field(default_factory=list)
 
 class ChallengeEdge(BaseModel):
-    source: str  # uuid
-    target: str  # uuid
+    source: str
+    target: str
 
 class ChallengesByKeywordGraphResponse(BaseModel):
     nodes: list[ChallengeNode] = Field(default_factory=list)
