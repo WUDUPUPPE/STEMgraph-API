@@ -27,13 +27,13 @@ def get_graph() -> GraphResponse:
 def get_graph_dependencies(id: str) -> DependencyGraphResponse:
     node_query = """
     MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON*]->(dep:Challenge)
-    RETURN DISTINCT dep.uuid AS UUID, dep.title AS TITLE
+    RETURN DISTINCT dep.uuid AS uuid, dep.title AS title
     """
 
     edge_query = """
     MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON*]->(a:Challenge)
     MATCH (a)-[:BUILDS_ON]->(b:Challenge)
-    RETURN DISTINCT a.uuid AS SOURCE, b.uuid AS TARGET
+    RETURN DISTINCT a.uuid AS source, b.uuid AS target
     """
 
     nodes = run_query(node_query, {"id": id})
@@ -51,7 +51,7 @@ def get_subGraph(start: str, end: str) -> SubgraphGraphResponse:
         (a:Challenge {uuid: $start})-[:BUILDS_ON*]-(b:Challenge {uuid: $end})
     )
     UNWIND nodes(path) AS node
-    RETURN DISTINCT node.uuid AS UUID, node.title AS TITLE, node.keywords AS KEYWORDS
+    RETURN DISTINCT node.uuid AS uuid, node.title AS title, node.keywords AS keywords
     """
 
     edge_query = """
@@ -59,7 +59,7 @@ def get_subGraph(start: str, end: str) -> SubgraphGraphResponse:
         (a:Challenge {uuid: $start})-[:BUILDS_ON*]-(b:Challenge {uuid: $end})
     )
     UNWIND relationships(path) AS rel
-    RETURN DISTINCT startNode(rel).uuid AS SOURCE, endNode(rel).uuid AS TARGET
+    RETURN DISTINCT startNode(rel).uuid AS source, endNode(rel).uuid AS target
     """
 
     nodes = run_query(node_query, {"start": start, "end": end})
