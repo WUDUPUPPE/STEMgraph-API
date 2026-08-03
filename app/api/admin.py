@@ -3,15 +3,10 @@ import subprocess
 import json
 from pathlib import Path
 from pydantic import BaseModel
+from app.models.schema_admin import UpdateResponse
 from fastapi import APIRouter, Header, HTTPException
 from app.service.neo4j_client import run_query
 
-class UpdateResponse(BaseModel):
-    status: str
-    message: str
-    fetch_stats: dict | None = None
-    export_stats: dict | None = None
-    
 router = APIRouter()
 WRITE_TOKEN = os.getenv("WRITE_TOKEN")
 
@@ -22,7 +17,6 @@ def update_challenges(x_api_key: str = Header(...)) -> UpdateResponse:
 
     # 1. Shell-Skripte ausführen (Reihenfolge: get_all → export → load_neo4j)
     try:
-        # Achtung: <START_UUID> musst du durch eure echte Start-ID ersetzen
         subprocess.run(
             ["bash", "scripts/get_all_challenges.sh"],
             check=True,
