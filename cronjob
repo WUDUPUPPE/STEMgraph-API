@@ -1,5 +1,5 @@
 # /etc/cron.d/stemgraph
-# Format: Minute Stunde Tag Monat Wochentag Befehl
+# Format: Minute Stunde Tag Monat Wochentag Benutzer Befehl
 
-# Alle 24h um 03:00
-0 3 * * * root cd /app && bash scripts/fetch_repos.sh && bash scripts/build_index.sh && python3 scripts/load_neo4j.py >> /var/log/cron.log 2>&1
+# Alle 24h um 03:00 den Admin-Endpoint über das Wrapper-Script triggern
+0 3 * * * root cd /app && bash scripts/trigger_update.sh
