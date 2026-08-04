@@ -14,13 +14,13 @@ def get_list() -> list[ChallengeListResponse]:
     return run_query(query)
 
 #Abhängige Challenges als Liste
-@router.get("/list/challenges/{id}/depends-on", tags=["List-Info"])
-def get_list_dependencies(id: str) -> list[DependencyResponse]:
+@router.get("/list/challenges/depends-on", tags=["List-Info"])
+def get_list_dependencies() -> list[DependencyResponse]:
     query = """
-    MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON*]->(dep:Challenge)
+    MATCH (c:Challenge)-[:BUILDS_ON*]->(dep:Challenge)
     RETURN DISTINCT dep.uuid AS uuid, dep.title AS title, dep.keywords AS keywords
     """
-    return run_query(query, {"id": id})
+    return run_query(query)
 
 #Challenge Sub-Path als Liste
 @router.get("/sublist", tags=["List-Info"])
@@ -35,8 +35,8 @@ def get_sublist(start: str, end: str) -> list[SubgraphListResponse]:
     return run_query(query, {"start": start, "end": end})
 
 #Neighbor Challenges for Pop-Up-Info
-@router.get("/challenges/{id}/neighbors", tags=["PopUp-Info"])
-def get_challenge_neighbors(id: str) -> NeighborsResponse:
+@router.get("/challenges/neighbors", tags=["PopUp-Info"])
+def get_challenge_neighbors() -> NeighborsResponse:
     previous_query = """
     MATCH (prev:Challenge)-[:BUILDS_ON]->(c:Challenge {uuid: $id})
     RETURN prev.uuid AS uuid, prev.title AS title, prev.keywords AS keywords
@@ -44,13 +44,13 @@ def get_challenge_neighbors(id: str) -> NeighborsResponse:
     """
 
     next_query = """
-    MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON]->(next:Challenge)
+    MATCH (c:Challenge)-[:BUILDS_ON]->(next:Challenge)
     RETURN next.uuid AS uuid, next.title AS title, next.keywords AS keywords
     ORDER BY next.title
     """
 
-    previous = run_query(previous_query, {"id": id})
-    next_items = run_query(next_query, {"id": id})
+    previous = run_query(previous_query)
+    next_items = run_query(next_query)
 
     return {
         "previous": previous,
