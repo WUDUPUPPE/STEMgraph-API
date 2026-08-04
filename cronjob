@@ -2,4 +2,4 @@
 # Format: Minute Stunde Tag Monat Wochentag Benutzer Befehl
 
 # Alle 24h um 03:00 den Admin-Endpoint über das Wrapper-Script triggern
-0 3 * * * root cd /app && bash scripts/trigger_update.sh
+0 3 * * * root cd /app && bash app/scripts/trigger_wrapper.sh

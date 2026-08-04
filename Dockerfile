@@ -1,5 +1,8 @@
 FROM python:3.13-slim
 
+#Installiert curl und entfernt den Cache, um das Image klein zu halten
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 #Installiert cron und entfernt den Cache, um das Image klein zu halten
 RUN apt-get update && apt-get install -y cron && rm -rf /var/lib/apt/lists/*
 

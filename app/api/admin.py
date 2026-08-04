@@ -18,15 +18,15 @@ def admin_update_challenges(x_api_key: str = Header(...)) -> UpdateResponse:
     # 1. Shell-Skripte ausführen (Reihenfolge: get_all → export → load_neo4j)
     try:
         subprocess.run(
-            ["bash", "scripts/get_all_challenges.sh"],
+            ["bash", "app/scripts/get_all_challenges.sh"],
             check=True,
         )
         subprocess.run(
-            ["bash", "scripts/export_graph_data.sh"],
+            ["bash", "app/scripts/export_graph_data.sh"],
             check=True,
         )
         subprocess.run(
-            ["bash", "scripts/load_neo4j.sh"],
+            ["bash", "app/scripts/load_neo4j.sh"],
             check=True,
         )
     except subprocess.CalledProcessError as e:
