@@ -15,8 +15,8 @@ GITHUB_ORG="STEMgraph"                          # GitHub Org ist auf STEMgraph g
 BASE_DIR="$WORKSPACE_DIR/challenges"            # Zielordner, in dem die Challenge-Repos geklont werden sollen
 
 declare -A VISITED                              # Assoziatives Array, um bereits verarbeitete UUIDs nicht doppelt zu speichern
-declare -a CLONED_REPOS                         # Liste für Repos, die in diesem Lauf neu geklont wurden
-declare -a UPDATED_REPOS                        # Liste für Repos, die in diesem Lauf wirklich aktualisiert wurden
+CLONED_REPOS=()									# Array, um die geklonten Repos zu speichern
+UPDATED_REPOS=()								# Array, um die aktualisierten Repos zu speichern
 
 STATS_FILE="$DATA_DIR/stats_fetch.json"         # Datei, in die ich am Ende die Statistik schreibe
 
