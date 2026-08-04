@@ -5,8 +5,8 @@ from app.service.neo4j_client import run_query
 router = APIRouter()
 
 #Keywords AS List
-@router.get("/keywords", tags=["Keyword-Info"])
-def get_keywords() -> KeywordListResponse:
+@router.get("/keywords/list", tags=["Keyword-Info"])
+def get_keywords_list() -> KeywordListResponse:
     query = """
     MATCH (c:Challenge)
     UNWIND c.keywords AS keyword
@@ -18,8 +18,8 @@ def get_keywords() -> KeywordListResponse:
     )
 
 #Challenges by Keyword AS List
-@router.get("/keywords/challenges", tags=["Keyword-Info"])
-def get_challenges_by_keyword(kw: str = Query) -> ChallengesByKeywordListResponse:
+@router.get("/keywords/challenges/list", tags=["Keyword-Info"])
+def get_challenges_by_keyword_list(kw: str = Query) -> ChallengesByKeywordListResponse:
     query = """
     MATCH (c:Challenge)
     WHERE $kw IN c.keywords
