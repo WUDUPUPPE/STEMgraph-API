@@ -11,7 +11,7 @@ router = APIRouter()
 WRITE_TOKEN = os.getenv("WRITE_TOKEN")
 
 @router.post("/admin/update-challenges", tags=["Admin/Health Check"])
-def update_challenges(x_api_key: str = Header(...)) -> UpdateResponse:
+def admin_update_challenges(x_api_key: str = Header(...)) -> UpdateResponse:
     if x_api_key != WRITE_TOKEN:
         raise HTTPException(status_code=403, detail="Invalid API Key")
 
