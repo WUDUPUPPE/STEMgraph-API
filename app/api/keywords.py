@@ -19,7 +19,7 @@ def get_keywords_list() -> KeywordListResponse:
 
 #Challenges by Keyword AS List
 @router.get("/keywords/challenges/list", tags=["Keyword-Info"])
-def get_challenges_by_keyword_list(kw: str = Query) -> ChallengesByKeywordListResponse:
+def get_challenges_by_keyword_list(kw: str = Query()) -> ChallengesByKeywordListResponse:
     query = """
     MATCH (c:Challenge)
     WHERE $kw IN c.keywords
@@ -55,7 +55,7 @@ def get_keyword_graph() -> KeywordGraphResponse:
 
 #Challenges by Keyword AS Graph
 @router.get("/keywords/challenges/graph", tags=["Keyword-Info"])
-def get_challenges_by_keyword_graph(kw: str = Query) -> ChallengesByKeywordGraphResponse:
+def get_challenges_by_keyword_graph(kw: str = Query()) -> ChallengesByKeywordGraphResponse:
     node_query = """
     MATCH (c:Challenge)
     WHERE $kw IN c.keywords
