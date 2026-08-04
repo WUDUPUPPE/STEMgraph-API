@@ -9,12 +9,12 @@ router = APIRouter()
 def get_graph() -> GraphResponse:
     nodes_query = """
     MATCH (c:Challenge)
-    RETURN DISTINCT c.uuid AS uuid, c.title AS title
+    RETURN DISTINCT c.id AS uuid, c.teaches AS title
     """
 
     edges_query = """
-    MATCH (c:Challenge)-[:BUILDS_ON]->(dep:Challenge)
-    RETURN DISTINCT c.uuid AS source, dep.uuid AS target
+    MATCH (c:Challenge)-[:DEPENDS_ON]->(dep:Challenge)
+    RETURN DISTINCT c.id AS source, dep.id AS target
     """
 
     return {
@@ -27,13 +27,13 @@ def get_graph() -> GraphResponse:
 def get_graph_dependencies() -> DependencyGraphResponse:
     node_query = """
     MATCH (c:Challenge)-[:BUILDS_ON*]->(dep:Challenge)
-    RETURN DISTINCT dep.uuid AS uuid, dep.title AS title
+    RETURN DISTINCT dep.id AS uuid, dep.teaches AS title
     """
 
     edge_query = """
-    MATCH (c:Challenge)-[:BUILDS_ON*]->(a:Challenge)
-    MATCH (a)-[:BUILDS_ON]->(b:Challenge)
-    RETURN DISTINCT a.uuid AS source, b.uuid AS target
+    MATCH (c:Challenge)-[:DEPENDS_ON*]->(a:Challenge)
+    MATCH (a)-[:DEPENDS_ON]->(b:Challenge)
+    RETURN DISTINCT a.id AS source, b.id AS target
     """
 
     nodes = run_query(node_query, {"id": id})
@@ -48,18 +48,18 @@ def get_graph_dependencies() -> DependencyGraphResponse:
 def get_subGraph(start: str, end: str) -> SubgraphGraphResponse:
     node_query = """
     MATCH path = shortestPath(
-        (a:Challenge {uuid: $start})-[:BUILDS_ON*]-(b:Challenge {uuid: $end})
+        (a:Challenge {uuid: $start})-[:DEPENDS_ON*]-(b:Challenge {uuid: $end})
     )
     UNWIND nodes(path) AS node
-    RETURN DISTINCT node.uuid AS uuid, node.title AS title, node.keywords AS keywords
+    RETURN DISTINCT node.id AS uuid, node.teaches AS title, node.keywords AS keywords
     """
 
     edge_query = """
     MATCH path = shortestPath(
-        (a:Challenge {uuid: $start})-[:BUILDS_ON*]-(b:Challenge {uuid: $end})
+        (a:Challenge {uuid: $start})-[:DEPENDS_ON*]-(b:Challenge {uuid: $end})
     )
     UNWIND relationships(path) AS rel
-    RETURN DISTINCT startNode(rel).uuid AS source, endNode(rel).uuid AS target
+    RETURN DISTINCT startNode(rel).id AS source, endNode(rel).id AS target
     """
 
     nodes = run_query(node_query, {"start": start, "end": end})

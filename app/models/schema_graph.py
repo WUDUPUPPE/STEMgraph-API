@@ -2,8 +2,8 @@ from pydantic import BaseModel, Field
 
 #All Challenges AS Graph
 class Node(BaseModel):
-    uuid: str
-    title: str | None = None
+    id: str
+    teaches: str | None = None
 
 class Edge(BaseModel):
     source: str
@@ -15,8 +15,8 @@ class GraphResponse(BaseModel):
 
 #Challenges Dependency AS Graph
 class GraphNodeResponse(BaseModel):
-    uuid: str
-    title: str | None = None
+    id: str
+    teaches: str | None = None
 
 class GraphEdgeResponse(BaseModel):
     source: str
@@ -28,8 +28,8 @@ class DependencyGraphResponse(BaseModel):
 
 #Subgraph AS Graph
 class GraphNode(BaseModel):
-    uuid: str
-    title: str | None = None
+    id: str
+    teaches: str | None = None
     keywords: list[str] = Field(default_factory=list)
 
 class GraphEdge(BaseModel):

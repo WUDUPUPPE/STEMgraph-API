@@ -6,8 +6,8 @@ class KeywordListResponse(BaseModel):
 
 #Challenges by Keyword AS List
 class ChallengeByKeywordListItem(BaseModel):
-    uuid: str
-    title: str | None = None
+    id: str
+    teaches: str | None = None
     keywords: list[str] = Field(default_factory=list)
 
 class ChallengesByKeywordListResponse(BaseModel):
@@ -27,8 +27,8 @@ class KeywordGraphResponse(BaseModel):
     
 #Challenges by Keyword AS Graph
 class ChallengeNode(BaseModel):
-    uuid: str
-    title: str | None = None
+    id: str
+    teaches: str | None = None
     keywords: list[str] = Field(default_factory=list)
 
 class ChallengeEdge(BaseModel):

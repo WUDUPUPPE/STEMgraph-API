@@ -10,7 +10,7 @@ def get_keywords_list() -> KeywordListResponse:
     query = """
     MATCH (c:Challenge)
     UNWIND c.keywords AS keyword
-    RETURN DISTINCT keyword AS keyword
+    RETURN DISTINCT keywords AS keyword
     """
     rows = run_query(query)
     return KeywordListResponse(
@@ -23,7 +23,7 @@ def get_challenges_by_keyword_list(kw: str = Query()) -> ChallengesByKeywordList
     query = """
     MATCH (c:Challenge)
     WHERE $kw IN c.keywords
-    RETURN c.uuid AS uuid, c.title AS title, c.keywords AS keywords
+    RETURN c.id AS uuid, c.teaches AS title, c.keywords AS keyword
     """
     rows = run_query(query, {"kw": kw})
     items = [ChallengeByKeywordListItem(**row) for row in rows]
@@ -35,7 +35,7 @@ def get_keyword_graph() -> KeywordGraphResponse:
     query = """
     MATCH (c:Challenge)
     UNWIND c.keywords AS keyword
-    RETURN DISTINCT keyword AS keyword, c.uuid AS uuid
+    RETURN DISTINCT keywords AS keyword, c.id AS uuid
     """
     rows = run_query(query)
 
@@ -59,13 +59,13 @@ def get_challenges_by_keyword_graph(kw: str = Query()) -> ChallengesByKeywordGra
     node_query = """
     MATCH (c:Challenge)
     WHERE $kw IN c.keywords
-    RETURN DISTINCT c.uuid AS uuid, c.title AS title, c.keywords AS keywords
+    RETURN DISTINCT c.id AS uuid, c.teaches AS title, c.keywords AS keywords
     """
 
     edge_query = """
-    MATCH (a:Challenge)-[:BUILDS_ON]->(b:Challenge)
+    MATCH (a:Challenge)-[:DEPENDS_ON]->(b:Challenge)
     WHERE $kw IN a.keywords AND $kw IN b.keywords
-    RETURN DISTINCT a.uuid AS source, b.uuid AS target
+    RETURN DISTINCT a.id AS source, b.id AS target
     """
 
     params = {"kw": kw}
