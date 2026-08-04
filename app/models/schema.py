@@ -1,14 +1,6 @@
 from pydantic import BaseModel, Field
 
-#Challenge Previous and Next for Pop-Up
-class NeighborChallenge(BaseModel):
-    uuid: str
-    title: str | None = None
-    keywords: list[str] = Field(default_factory=list)
 
-class NeighborsResponse(BaseModel):
-    previous: list[NeighborChallenge] = Field(default_factory=list)
-    next: list[NeighborChallenge] = Field(default_factory=list)
 
 #Keyword AS List
 
