@@ -36,8 +36,8 @@ def admin_update_challenges(x_api_key: str = Header(...)) -> UpdateResponse:
         )
 
     # 2. Stats-Dateien einlesen
-    fetch_stats_path = Path("stats_fetch.json")
-    export_stats_path = Path("stats_export.json")
+    fetch_stats_path = Path("../data/stats_fetch.json")
+    export_stats_path = Path("../data/stats_export.json")
 
     fetch_stats: dict | None = None
     export_stats: dict | None = None
