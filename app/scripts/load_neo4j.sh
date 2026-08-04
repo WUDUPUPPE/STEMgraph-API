@@ -59,8 +59,8 @@ def load_nodes(tx, nodes):
     for n in nodes:                                             # Über alle Nodes aus der graph-data.json iterieren
         tx.run(
             """
-            MERGE (c:Challenge {uuid: $id})
-            SET c.title = $teaches, c.keywords = $keywords, c.author = $author, c.first_use = $firstused
+            MERGE (c:Challenge {id: $id})
+            SET c.teaches = $teaches, c.keywords = $keywords, c.author = $author, c.first_use = $firstused
             """,
             id=n.get("id", ""),                                 # Challenge-ID aus dem Node-Dict
             teaches=n.get("teaches", ""),                       # Titel / Lerninhalt aus dem Node-Dict
@@ -74,9 +74,9 @@ def load_edges(tx, edges):
     for e in edges:                                             # Über alle Kanten aus der graph-data.json iterieren
         tx.run(
             """
-            MATCH (target:Challenge {uuid: $target})
-            MATCH (source:Challenge {uuid: $source})
-            MERGE (target)-[:BUILDS_ON]->(source)
+            MATCH (target:Challenge {id: $target})
+            MATCH (source:Challenge {id: $source})
+            MERGE (target)-[:DEPENDS_ON]->(source)
             """,
             target=e.get("target", ""),                         # Ziel-Challenge (die auf etwas aufbaut)
             source=e.get("source", "")                          # Quell-Challenge (die Voraussetzung)
