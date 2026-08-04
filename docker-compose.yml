@@ -1,32 +1,49 @@
 services:
   neo4j:
     image: neo4j:5.11.0
-
+    container_name: neo4j
     environment:
-      - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PW}
+      NEO4J_AUTH: "${NEO4J_USER}/${NEO4J_PW}"
     volumes:
       - neo4j_data:/data
-    
     networks:
-      backendnetworks:
+      - backendnetwork
 
   stemgraph-api:
     build: .
+    container_name: stemgraph-api
+    environment:
+      NEO4J_URI: "${NEO4J_URI}"
+      NEO4J_USER: "${NEO4J_USER}"
+      NEO4J_PW: "${NEO4J_PW}"
+      WRITE_TOKEN: "${WRITE_TOKEN}"
     ports:
       - "8000:8000"
-    environment:
-      - NEO4J_URI=${NEO4J_URI}
-      - NEO4J_USER=${NEO4J_USER}
-      - NEO4J_PW=${NEO4J_PW}
-      - WRITE_TOKEN=${WRITE_TOKEN}
     depends_on:
       - neo4j
-
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     networks:
-      backendnetworks:
+      - backendnetwork
+
+  stemgraph-cron:
+    build: .
+    container_name: stemgraph-cron
+    environment:
+      NEO4J_URI: "${NEO4J_URI}"
+      NEO4J_USER: "${NEO4J_USER}"
+      NEO4J_PW: "${NEO4J_PW}"
+      WRITE_TOKEN: "${WRITE_TOKEN}"
+    depends_on:
+      - neo4j
+      - stemgraph-api
+    command: cron -f
+    volumes:
+      - .:/app
+    networks:
+      - backendnetwork
 
 volumes:
   neo4j_data:
 
 networks:
-  backendnetworks:
+  backendnetwork:
