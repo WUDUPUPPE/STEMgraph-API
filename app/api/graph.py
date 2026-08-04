@@ -23,15 +23,15 @@ def get_graph() -> GraphResponse:
     }
 
 #Dependency Challenges AS Graph
-@router.get("/graph/challenges/{id}/depends-on", tags=["Graph-Info"])
-def get_graph_dependencies(id: str) -> DependencyGraphResponse:
+@router.get("/graph/challenges/depends-on", tags=["Graph-Info"])
+def get_graph_dependencies() -> DependencyGraphResponse:
     node_query = """
-    MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON*]->(dep:Challenge)
+    MATCH (c:Challenge)-[:BUILDS_ON*]->(dep:Challenge)
     RETURN DISTINCT dep.uuid AS uuid, dep.title AS title
     """
 
     edge_query = """
-    MATCH (c:Challenge {uuid: $id})-[:BUILDS_ON*]->(a:Challenge)
+    MATCH (c:Challenge)-[:BUILDS_ON*]->(a:Challenge)
     MATCH (a)-[:BUILDS_ON]->(b:Challenge)
     RETURN DISTINCT a.uuid AS source, b.uuid AS target
     """

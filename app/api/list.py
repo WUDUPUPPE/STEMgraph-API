@@ -4,7 +4,7 @@ from app.service.neo4j_client import run_query
 
 router = APIRouter()
 
-#Challenges als Listenansicht
+#All Challenges AS List
 @router.get("/list", tags=["List-Info"])
 def get_list() -> list[ChallengeListResponse]:
     query = """
@@ -13,7 +13,7 @@ def get_list() -> list[ChallengeListResponse]:
     """
     return run_query(query)
 
-#Abhängige Challenges als Liste
+#Dependency Challenges AS List
 @router.get("/list/challenges/depends-on", tags=["List-Info"])
 def get_list_dependencies() -> list[DependencyResponse]:
     query = """
@@ -22,7 +22,7 @@ def get_list_dependencies() -> list[DependencyResponse]:
     """
     return run_query(query)
 
-#Challenge Sub-Path als Liste
+#Subgraph Path AS List
 @router.get("/sublist", tags=["List-Info"])
 def get_sublist(start: str, end: str) -> list[SubgraphListResponse]:
     query = """
