@@ -9,12 +9,12 @@ router = APIRouter()
 def get_keywords_list() -> KeywordListResponse:
     query = """
     MATCH (c:Challenge)
-    UNWIND c.keywords AS keyword
-    RETURN DISTINCT keywords AS keyword
+    UNWIND c.keywords AS keywords
+    RETURN DISTINCT keywords
     """
     rows = run_query(query)
     return KeywordListResponse(
-        keywords=[row["keyword"] for row in rows]
+        keywords=[row["keywords"] for row in rows]
     )
 
 #Challenges by Keyword AS List
@@ -23,7 +23,7 @@ def get_challenges_by_keyword_list(kw: str = Query()) -> ChallengesByKeywordList
     query = """
     MATCH (c:Challenge)
     WHERE $kw IN c.keywords
-    RETURN c.id AS id, c.teaches AS teaches, c.keywords AS keyword
+    RETURN c.id AS id, c.teaches AS teaches, c.keywords AS keywords
     """
     rows = run_query(query, {"kw": kw})
     items = [ChallengeByKeywordListItem(**row) for row in rows]
@@ -31,11 +31,11 @@ def get_challenges_by_keyword_list(kw: str = Query()) -> ChallengesByKeywordList
 
 #Keywords AS Graph
 @router.get("/keywords/graph", tags=["Keyword-Info"])
-def get_keyword_graph() -> KeywordGraphResponse:
+def get_keywords_graph() -> KeywordGraphResponse:
     query = """
     MATCH (c:Challenge)
-    UNWIND c.keywords AS keyword
-    RETURN DISTINCT keywords AS keyword, c.id AS id
+    UNWIND c.keywords AS keywords
+    RETURN DISTINCT c.id AS id, keywords AS keywords
     """
     rows = run_query(query)
 
@@ -44,12 +44,12 @@ def get_keyword_graph() -> KeywordGraphResponse:
     edges: list[KeywordEdge] = []
 
     for row in rows:
-        kw = row["keyword"]
         id = row["id"]
+        kw = row["keywords"]
         if kw not in keywords_seen:
-            nodes.append(KeywordNode(keyword=kw))
+            nodes.append(KeywordNode(keywords=kw))
             keywords_seen.add(kw)
-        edges.append(KeywordEdge(keyword=kw, challenge_id=id))
+        edges.append(KeywordEdge(keywords=kw, id=id))
 
     return KeywordGraphResponse(nodes=nodes, edges=edges)
 

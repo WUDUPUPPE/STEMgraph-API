@@ -15,11 +15,11 @@ class ChallengesByKeywordListResponse(BaseModel):
 
 #Keywords AS Graph
 class KeywordNode(BaseModel):
-    keyword: str
+    keywords: str
 
 class KeywordEdge(BaseModel):
-    keyword: str
-    challenge_uuid: str
+    id: str
+    keywords: str
 
 class KeywordGraphResponse(BaseModel):
     nodes: list[KeywordNode] = Field(default_factory=list)
