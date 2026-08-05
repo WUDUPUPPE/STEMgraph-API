@@ -1,5 +1,4 @@
-from pydantic import BaseModel, Field, field_validator
-from datetime import date
+from pydantic import BaseModel, Field
   
 #All Challenges AS List
 class ChallengeListResponse(BaseModel):
