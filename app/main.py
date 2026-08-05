@@ -6,7 +6,7 @@ class HealthcheckResponse(BaseModel):
     status: str
     message: str
 
-app = FastAPI(title="STEMgraph Challenge API", version="1.0.2")
+app = FastAPI(title="STEMgraph API", version="2.0.0")
 
 app.include_router(graph.router)
 app.include_router(list.router)
