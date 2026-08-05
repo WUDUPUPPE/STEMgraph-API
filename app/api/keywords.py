@@ -23,7 +23,7 @@ def get_challenges_by_keyword_list(kw: str = Query()) -> ChallengesByKeywordList
     query = """
     MATCH (c:Challenge)
     WHERE $kw IN c.keywords
-    RETURN c.id AS id, c.teaches AS title, c.keywords AS keyword
+    RETURN c.id AS id, c.teaches AS teaches, c.keywords AS keyword
     """
     rows = run_query(query, {"kw": kw})
     items = [ChallengeByKeywordListItem(**row) for row in rows]
@@ -59,7 +59,7 @@ def get_challenges_by_keyword_graph(kw: str = Query()) -> ChallengesByKeywordGra
     node_query = """
     MATCH (c:Challenge)
     WHERE $kw IN c.keywords
-    RETURN DISTINCT c.id AS id, c.teaches AS title, c.keywords AS keywords
+    RETURN DISTINCT c.id AS id, c.teaches AS teaches, c.keywords AS keywords
     """
 
     edge_query = """

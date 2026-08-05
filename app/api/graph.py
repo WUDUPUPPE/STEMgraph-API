@@ -9,7 +9,7 @@ router = APIRouter()
 def get_graph() -> GraphResponse:
     nodes_query = """
     MATCH (c:Challenge)
-    RETURN DISTINCT c.id AS id, c.teaches AS title
+    RETURN DISTINCT c.id AS id, c.teaches AS teaches
     """
 
     edges_query = """
@@ -27,7 +27,7 @@ def get_graph() -> GraphResponse:
 def get_graph_dependencies() -> DependencyGraphResponse:
     node_query = """
     MATCH (c:Challenge)-[:BUILDS_ON*]->(dep:Challenge)
-    RETURN DISTINCT dep.id AS id, dep.teaches AS title
+    RETURN DISTINCT dep.id AS id, dep.teaches AS teaches
     """
 
     edge_query = """
@@ -51,7 +51,7 @@ def get_subGraph(start: str, end: str) -> SubgraphGraphResponse:
         (a:Challenge {id: $start})-[:DEPENDS_ON*]-(b:Challenge {id: $end})
     )
     UNWIND nodes(path) AS node
-    RETURN DISTINCT node.id AS id, node.teaches AS title, node.keywords AS keywords
+    RETURN DISTINCT node.id AS id, node.teaches AS teaches, node.keywords AS keywords
     """
 
     edge_query = """
