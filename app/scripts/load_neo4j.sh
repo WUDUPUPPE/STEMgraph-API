@@ -60,7 +60,7 @@ def load_nodes(tx, nodes):
         tx.run(
             """
             MERGE (c:Challenge {id: $id})
-            SET c.teaches = $teaches, c.keywords = $keywords, c.author = $author, c.first_use = $firstused
+            SET c.teaches = $teaches, c.keywords = $keywords, c.author = $author, c.firstused = $firstused
             """,
             id=n.get("id", ""),                                 # Challenge-ID aus dem Node-Dict
             teaches=n.get("teaches", ""),                       # Titel / Lerninhalt aus dem Node-Dict
