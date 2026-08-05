@@ -4,6 +4,10 @@ services:
     container_name: neo4j
     environment:
       NEO4J_AUTH: "${NEO4J_USER}/${NEO4J_PW}"
+    # Zum Zugriff auf die Neo4j-Benutzeroberfläche und den Bolt-Port von außen:
+    #ports:
+    #  - "7474:7474"
+    #  - "7687:7687"
     volumes:
       - neo4j_data:/data
     networks:
