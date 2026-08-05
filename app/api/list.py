@@ -33,31 +33,3 @@ def get_sublist(start: str, end: str) -> list[SubgraphListResponse]:
     RETURN DISTINCT node.id AS id, node.teaches AS teaches, node.keywords AS keywords
     """
     return run_query(query, {"start": start, "end": end})
-
-#Neighbor Challenges for Pop-Up-Info
-@router.get("/challenges/neighbors", tags=["PopUp-Info"])
-def get_challenge_neighbors(id: str) -> NeighborsResponse:
-    center_query = """
-    MATCH (c:Challenge {id: $id})
-    RETURN c.id AS id, c.teaches AS teaches, c.keywords AS keywords
-    """
-
-    previous_query = """
-    MATCH (prev:Challenge)-[:DEPENDS_ON]->(c:Challenge {id: $id})
-    RETURN prev.id AS id, prev.teaches AS teaches, prev.keywords AS keywords
-    """
-
-    next_query = """
-    MATCH (c:Challenge {id: $id})-[:DEPENDS_ON]->(next:Challenge)
-    RETURN next.id AS id, next.teaches AS teaches, next.keywords AS keywords
-    ORDER BY next.teaches
-    """
-
-    center = run_query(center_query, {"id": id})
-    previous = run_query(previous_query, {"id": id})
-    next_items = run_query(next_query, {"id": id})
-
-    return {
-        "previous": previous,
-        "next": next_items
-    }
