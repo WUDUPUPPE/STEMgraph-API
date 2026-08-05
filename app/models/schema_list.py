@@ -1,10 +1,13 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+from datetime import date
   
 #All Challenges AS List
 class ChallengeListResponse(BaseModel):
     id: str
     teaches: str | None = None
     keywords: list[str] = Field(default_factory=list)
+    author: list[str] | str | None = None
+    firstused: str | None = None
 
 #Challenges Dependency AS List
 class DependencyResponse(BaseModel):

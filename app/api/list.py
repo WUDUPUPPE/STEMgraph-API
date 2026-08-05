@@ -15,7 +15,7 @@ def get_list() -> list[ChallengeListResponse]:
 
 #Dependency Challenges AS List
 @router.get("/list/challenges/depends-on", tags=["List-Info"])
-def get_list_dependencies() -> list[DependencyResponse]:
+def get_list_dependencies(id: str) -> list[DependencyResponse]:
     query = """
     MATCH (c:Challenge)-[:DEPENDS_ON*]->(dep:Challenge)
     RETURN DISTINCT dep.id AS id, dep.teaches AS teaches, dep.keywords AS keywords
