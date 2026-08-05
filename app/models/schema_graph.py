@@ -37,7 +37,6 @@ class GraphNode(BaseModel):
 class GraphEdge(BaseModel):
     source: str
     target: str
-    keywords: list[str] = Field(default_factory=list)
 
 class SubgraphGraphResponse(BaseModel):
     nodes: list[GraphNode] = Field(default_factory=list)

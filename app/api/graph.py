@@ -9,7 +9,7 @@ router = APIRouter()
 def get_graph() -> GraphResponse:
     nodes_query = """
     MATCH (c:Challenge)
-    RETURN DISTINCT c.id AS id, c.teaches AS teaches
+    RETURN DISTINCT c.id AS id, c.teaches AS teaches, c.keywords AS keywords
     """
 
     edges_query = """
@@ -27,10 +27,10 @@ def get_graph() -> GraphResponse:
 def get_graph_dependencies(id: str) -> DependencyGraphResponse:
     node_query = """
     MATCH (c:Challenge {id: $id})
-    RETURN DISTINCT c.id AS id, c.teaches AS teaches
+    RETURN DISTINCT c.id AS id, c.teaches AS teaches, c.keywords AS keywords
     UNION
     MATCH (c:Challenge {id: $id})-[:BUILDS_ON*]->(dep:Challenge)
-    RETURN DISTINCT dep.id AS id, dep.teaches AS teaches
+    RETURN DISTINCT dep.id AS id, dep.teaches AS teaches, dep.keywords AS keywords
     """
 
     edge_query = """
