@@ -24,14 +24,17 @@ def get_graph() -> GraphResponse:
 
 #Dependency Challenges AS Graph
 @router.get("/graph/challenges/depends-on", tags=["Graph-Info"])
-def get_graph_dependencies() -> DependencyGraphResponse:
+def get_graph_dependencies(id: str) -> DependencyGraphResponse:
     node_query = """
-    MATCH (c:Challenge)-[:BUILDS_ON*]->(dep:Challenge)
+    MATCH (c:Challenge {id: $id})
+    RETURN DISTINCT c.id AS id, c.teaches AS teaches
+    UNION
+    MATCH (c:Challenge {id: $id})-[:BUILDS_ON*]->(dep:Challenge)
     RETURN DISTINCT dep.id AS id, dep.teaches AS teaches
     """
 
     edge_query = """
-    MATCH (c:Challenge)-[:DEPENDS_ON*]->(a:Challenge)
+    MATCH (c:Challenge {id: $id})-[:DEPENDS_ON*]->(a:Challenge)
     MATCH (a)-[:DEPENDS_ON]->(b:Challenge)
     RETURN DISTINCT a.id AS source, b.id AS target
     """
@@ -69,8 +72,3 @@ def get_subGraph(start: str, end: str) -> SubgraphGraphResponse:
         "nodes": nodes,
         "edges": edges
     }
-    
-@router.get("/graph-test", tags=["Graph-Info"])
-def graph_test():
-    test_query = "MATCH (n) RETURN count(n) AS count"
-    return run_query(test_query)
