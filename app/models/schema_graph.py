@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 class Node(BaseModel):
     id: str
     teaches: str | None = None
+    keywords: list[str] = Field(default_factory=list)
 
 class Edge(BaseModel):
     source: str
@@ -17,6 +18,7 @@ class GraphResponse(BaseModel):
 class GraphNodeResponse(BaseModel):
     id: str
     teaches: str | None = None
+    keywords: list[str] = Field(default_factory=list)
 
 class GraphEdgeResponse(BaseModel):
     source: str
@@ -35,6 +37,7 @@ class GraphNode(BaseModel):
 class GraphEdge(BaseModel):
     source: str
     target: str
+    keywords: list[str] = Field(default_factory=list)
 
 class SubgraphGraphResponse(BaseModel):
     nodes: list[GraphNode] = Field(default_factory=list)
