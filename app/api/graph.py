@@ -9,7 +9,7 @@ router = APIRouter()
 def get_graph() -> GraphResponse:
     nodes_query = """
     MATCH (c:Challenge)
-    RETURN DISTINCT c.id AS id, c.teaches AS teaches, c.keywords AS keywords
+    RETURN DISTINCT c.id AS id, c.teaches AS teaches, c.keywords AS keywords, c.author AS author, c.firstused AS firstused
     """
 
     edges_query = """
