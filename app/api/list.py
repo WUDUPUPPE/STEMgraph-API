@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.models.schema_list import ChallengeListResponse, DependencyResponse, SubgraphListResponse, NeighborsResponse
+from app.models.schema_list import ChallengeListResponse, DependencyResponse, SubgraphListResponse
 from app.service.neo4j_client import run_query
 
 router = APIRouter()
