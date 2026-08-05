@@ -23,7 +23,7 @@ def get_challenges_by_keyword_list(kw: str = Query()) -> ChallengesByKeywordList
     query = """
     MATCH (c:Challenge)
     WHERE $kw IN c.keywords
-    RETURN c.id AS uuid, c.teaches AS title, c.keywords AS keyword
+    RETURN c.id AS id, c.teaches AS title, c.keywords AS keyword
     """
     rows = run_query(query, {"kw": kw})
     items = [ChallengeByKeywordListItem(**row) for row in rows]
@@ -35,7 +35,7 @@ def get_keyword_graph() -> KeywordGraphResponse:
     query = """
     MATCH (c:Challenge)
     UNWIND c.keywords AS keyword
-    RETURN DISTINCT keywords AS keyword, c.id AS uuid
+    RETURN DISTINCT keywords AS keyword, c.id AS id
     """
     rows = run_query(query)
 
@@ -45,11 +45,11 @@ def get_keyword_graph() -> KeywordGraphResponse:
 
     for row in rows:
         kw = row["keyword"]
-        uuid = row["uuid"]
+        id = row["id"]
         if kw not in keywords_seen:
             nodes.append(KeywordNode(keyword=kw))
             keywords_seen.add(kw)
-        edges.append(KeywordEdge(keyword=kw, challenge_uuid=uuid))
+        edges.append(KeywordEdge(keyword=kw, challenge_id=id))
 
     return KeywordGraphResponse(nodes=nodes, edges=edges)
 
@@ -59,7 +59,7 @@ def get_challenges_by_keyword_graph(kw: str = Query()) -> ChallengesByKeywordGra
     node_query = """
     MATCH (c:Challenge)
     WHERE $kw IN c.keywords
-    RETURN DISTINCT c.id AS uuid, c.teaches AS title, c.keywords AS keywords
+    RETURN DISTINCT c.id AS id, c.teaches AS title, c.keywords AS keywords
     """
 
     edge_query = """

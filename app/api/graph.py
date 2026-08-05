@@ -9,7 +9,7 @@ router = APIRouter()
 def get_graph() -> GraphResponse:
     nodes_query = """
     MATCH (c:Challenge)
-    RETURN DISTINCT c.id AS uuid, c.teaches AS title
+    RETURN DISTINCT c.id AS id, c.teaches AS title
     """
 
     edges_query = """
@@ -27,7 +27,7 @@ def get_graph() -> GraphResponse:
 def get_graph_dependencies() -> DependencyGraphResponse:
     node_query = """
     MATCH (c:Challenge)-[:BUILDS_ON*]->(dep:Challenge)
-    RETURN DISTINCT dep.id AS uuid, dep.teaches AS title
+    RETURN DISTINCT dep.id AS id, dep.teaches AS title
     """
 
     edge_query = """
@@ -48,15 +48,15 @@ def get_graph_dependencies() -> DependencyGraphResponse:
 def get_subGraph(start: str, end: str) -> SubgraphGraphResponse:
     node_query = """
     MATCH path = shortestPath(
-        (a:Challenge {uuid: $start})-[:DEPENDS_ON*]-(b:Challenge {uuid: $end})
+        (a:Challenge {id: $start})-[:DEPENDS_ON*]-(b:Challenge {id: $end})
     )
     UNWIND nodes(path) AS node
-    RETURN DISTINCT node.id AS uuid, node.teaches AS title, node.keywords AS keywords
+    RETURN DISTINCT node.id AS id, node.teaches AS title, node.keywords AS keywords
     """
 
     edge_query = """
     MATCH path = shortestPath(
-        (a:Challenge {uuid: $start})-[:DEPENDS_ON*]-(b:Challenge {uuid: $end})
+        (a:Challenge {id: $start})-[:DEPENDS_ON*]-(b:Challenge {id: $end})
     )
     UNWIND relationships(path) AS rel
     RETURN DISTINCT startNode(rel).id AS source, endNode(rel).id AS target

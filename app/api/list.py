@@ -9,7 +9,7 @@ router = APIRouter()
 def get_list() -> list[ChallengeListResponse]:
     query = """
     MATCH (c:Challenge) 
-    RETURN c.id AS uuid, c.teaches AS title, c.keywords AS keywords, c.author AS author, c.firstused AS firstused
+    RETURN c.id AS id, c.teaches AS title, c.keywords AS keywords, c.author AS author, c.firstused AS firstused
     """
     return run_query(query)
 
@@ -18,7 +18,7 @@ def get_list() -> list[ChallengeListResponse]:
 def get_list_dependencies() -> list[DependencyResponse]:
     query = """
     MATCH (c:Challenge)-[:DEPENDS_ON*]->(dep:Challenge)
-    RETURN DISTINCT dep.id AS uuid, dep.teaches AS title, dep.keywords AS keywords
+    RETURN DISTINCT dep.id AS id, dep.teaches AS title, dep.keywords AS keywords
     """
     return run_query(query)
 
@@ -27,10 +27,10 @@ def get_list_dependencies() -> list[DependencyResponse]:
 def get_sublist(start: str, end: str) -> list[SubgraphListResponse]:
     query = """
     MATCH path = shortestPath(
-        (a:Challenge {uuid: $start})-[:DEPENDS_ON*]-(b:Challenge {uuid: $end})
+        (a:Challenge {id: $start})-[:DEPENDS_ON*]-(b:Challenge {id: $end})
     )
     UNWIND nodes(path) AS node
-    RETURN DISTINCT node.id AS uuid, node.teaches AS title, node.keywords AS keywords
+    RETURN DISTINCT node.id AS id, node.teaches AS title, node.keywords AS keywords
     """
     return run_query(query, {"start": start, "end": end})
 
@@ -38,14 +38,14 @@ def get_sublist(start: str, end: str) -> list[SubgraphListResponse]:
 @router.get("/challenges/neighbors", tags=["PopUp-Info"])
 def get_challenge_neighbors() -> NeighborsResponse:
     previous_query = """
-    MATCH (prev:Challenge)-[:DEPENDS_ON]->(c:Challenge {uuid: $id})
-    RETURN prev.id AS uuid, prev.teaches AS title, prev.keywords AS keywords
+    MATCH (prev:Challenge)-[:DEPENDS_ON]->(c:Challenge {id: $id})
+    RETURN prev.id AS id, prev.teaches AS title, prev.keywords AS keywords
     ORDER BY prev.title
     """
 
     next_query = """
     MATCH (c:Challenge)-[:DEPENDS_ON]->(next:Challenge)
-    RETURN next.id AS uuid, next.teaches AS title, next.keywords AS keywords
+    RETURN next.id AS id, next.teaches AS title, next.keywords AS keywords
     ORDER BY next.title
     """
 
