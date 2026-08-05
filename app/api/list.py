@@ -45,7 +45,6 @@ def get_challenge_neighbors(id: str) -> NeighborsResponse:
     previous_query = """
     MATCH (prev:Challenge)-[:DEPENDS_ON]->(c:Challenge {id: $id})
     RETURN prev.id AS id, prev.teaches AS teaches, prev.keywords AS keywords
-    ORDER BY prev.teaches
     """
 
     next_query = """
