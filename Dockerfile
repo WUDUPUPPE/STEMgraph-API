@@ -1,7 +1,7 @@
 FROM python:3.13-slim
 
 #Installiert die benötigten Pakete für Cron, Curl und Git und entfernt die Cache-Dateien, um das Image klein zu halten
-RUN apt-get update && apt-get install -y cron curl git&& rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl git&& rm -rf /var/lib/apt/lists/*
 
 #Setzt das Arbeitsverzeichnis auf /app
 WORKDIR /app
