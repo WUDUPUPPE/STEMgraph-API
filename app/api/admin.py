@@ -1,14 +1,63 @@
 import os
 import subprocess
 import json
+import asyncio
 from pathlib import Path
 from pydantic import BaseModel
-from app.models.schema_admin import UpdateResponse
-from fastapi import APIRouter, Header, HTTPException
-from app.service.neo4j_client import run_query
+from fastapi import APIRouter, Header, HTTPException, BackgroundTasks
+from app.models.schema_admin import UpdateResponse, ScheduleRequest
+from app.service.task_scheduler import execute_update, last_update_status, schedule_changed, schedule_config
 
 router = APIRouter()
 WRITE_TOKEN = os.getenv("WRITE_TOKEN")
+
+def check_api_key(x_api_key: str) -> None:
+    if x_api_key != WRITE_TOKEN:
+        raise HTTPException(status_code=403,detail="Invalid API Key",)
+
+#Manuel Update
+@router.post("/admin/update-challenges", tags=["Admin/Health Check"])
+async def admin_update_challenges(background_tasks: BackgroundTasks, x_api_key: str = Header(...)):
+    check_api_key
+    if last_update_status["status"] == "running":
+        return {"status": "already_running", "message": ("An update is already running")
+        }
+
+    background_tasks.add_task(execute_update,)
+
+    return {"status": "started","message": ("Challenge update started")
+    }
+
+#Status
+@router.get("/admin/update-status", tags=["Admin/Health Check"])
+def get_update_status(x_api_key: str = Header(...)): 
+    check_api_key(x_api_key)
+    
+    return last_update_status
+
+#Read Schedule
+@router.get("/admin/schedule",tags=["Admin/Health Check"])
+def get_schedule(x_api_key: str = Header(...)):
+    check_api_key(x_api_key)
+
+    return schedule_config
+
+@router.put("/admin/schedule",tags=["Admin/Health Check"])
+def update_schedule(schedule: ScheduleRequest, x_api_key: str = Header(...)):
+    check_api_key(x_api_key)
+
+    schedule_config["enabled"] = schedule.enabled
+    schedule_config["interval_minutes"] = (schedule.interval_minutes    )
+
+    schedule_changed.set()
+    
+    return {"status": "ok", "message": "Schedule updated", "schedule": schedule_config,
+    }
+
+
+
+
+
 
 @router.post("/admin/update-challenges", tags=["Admin/Health Check"])
 def admin_update_challenges(x_api_key: str = Header(...)) -> UpdateResponse:
