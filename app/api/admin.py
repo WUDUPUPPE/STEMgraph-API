@@ -6,7 +6,7 @@ from pathlib import Path
 from pydantic import BaseModel
 from fastapi import APIRouter, Header, HTTPException, BackgroundTasks
 from app.models.schema_admin import UpdateResponse, ScheduleRequest
-from app.service.task_scheduler import execute_update, last_update_status, schedule_changed, schedule_config
+from app.service import task_scheduler
 
 router = APIRouter()
 WRITE_TOKEN = os.getenv("WRITE_TOKEN")
@@ -19,11 +19,11 @@ def check_api_key(x_api_key: str) -> None:
 @router.post("/admin/update-challenges", tags=["Admin/Health Check"])
 async def admin_update_challenges(background_tasks: BackgroundTasks, x_api_key: str = Header(...)):
     check_api_key
-    if last_update_status["status"] == "running":
+    if task_scheduler.last_update_status["status"] == "running":
         return {"status": "already_running", "message": ("An update is already running")
         }
 
-    background_tasks.add_task(execute_update,)
+    background_tasks.add_task(task_scheduler.execute_update,)
 
     return {"status": "started","message": ("Challenge update started")
     }
@@ -33,25 +33,26 @@ async def admin_update_challenges(background_tasks: BackgroundTasks, x_api_key: 
 def get_update_status(x_api_key: str = Header(...)): 
     check_api_key(x_api_key)
     
-    return last_update_status
+    return task_scheduler.last_update_status
 
 #Read Schedule
 @router.get("/admin/schedule",tags=["Admin/Health Check"])
 def get_schedule(x_api_key: str = Header(...)):
     check_api_key(x_api_key)
 
-    return schedule_config
+    return task_scheduler.schedule_config
 
+#Update Schedule
 @router.put("/admin/schedule",tags=["Admin/Health Check"])
 def update_schedule(schedule: ScheduleRequest, x_api_key: str = Header(...)):
     check_api_key(x_api_key)
 
-    schedule_config["enabled"] = schedule.enabled
-    schedule_config["interval_minutes"] = (schedule.interval_minutes    )
+    task_scheduler.schedule_config["enabled"] = schedule.enabled
+    task_scheduler.schedule_config["interval_minutes"] = (schedule.interval_minutes    )
 
-    schedule_changed.set()
+    task_scheduler.schedule_changed.set()
     
-    return {"status": "ok", "message": "Schedule updated", "schedule": schedule_config,
+    return {"status": "ok", "message": "Schedule updated", "schedule": task_scheduler.schedule_config,
     }
 
 

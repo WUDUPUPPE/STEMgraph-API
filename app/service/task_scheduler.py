@@ -60,13 +60,13 @@ def run_update_process() -> UpdateResponse:
             export_stats = None
 
     last_update_status = {
-        "status": "ok", "message": ("Challenges updated, graph exported and Neo4j loaded"),
+        "status": "ok", "message": ("Challenges updated, Graph exported and Neo4j loaded"),
         "fetch_stats": fetch_stats,
         "export_stats": export_stats,
     }
 
     return UpdateResponse(
-        status="ok", message=("Challenges updated, graph exported and Neo4j loaded"),
+        status="ok", message=("Challenges updated, Graph exported and Neo4j loaded"),
         fetch_stats=fetch_stats,
         export_stats=export_stats,
     )
