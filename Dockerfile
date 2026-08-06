@@ -13,10 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 #Kopiert den Rest des Codes in das Arbeitsverzeichnis
 COPY . .
 
-#Kopiert die cronjob Datei in das Verzeichnis /etc/cron.d und setzt die Berechtigungen
-COPY cronjob /etc/cron.d/stemgraph
-RUN chmod 0644 /etc/cron.d/stemgraph
-
 #Fügt den cronjob zur crontab hinzu
 RUN touch /var/log/cron.log
 
