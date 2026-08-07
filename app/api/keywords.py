@@ -42,7 +42,7 @@ def get_keywords_graph() -> KeywordGraphResponse:
         if kw not in keywords_seen:
             nodes.append(KeywordNode(keywords=kw))
             keywords_seen.add(kw)
-        edges.append(KeywordEdge(keywords=kw, id=id))
+        edges.append(KeywordEdge(id=id), keywords=kw)
 
     return KeywordGraphResponse(
         nodes=nodes, edges=edges
