@@ -89,8 +89,6 @@ def extract_meta_json(readme_path: str):
 
 # Liste aller Knoten für graph-data.json
 nodes = []
-# Liste aller Kanten für graph-data.json
-edges = []
 
 # Set, damit ich jede id nur einmal als Node eintrage
 seen_ids = set()
@@ -160,15 +158,6 @@ graph = {
 # Datei zum Schreiben öffnen
 with open(output_file, "w", encoding="utf-8") as f:
     # JSON schön formatiert mit Einrückungen schreiben
-    json.dump(graph, f, indent=2, ensure_ascii=False)
-
-# Gesamtobjekt für die graph-data.json
-graph = {
-    "nodes": nodes,
-    "edges": edges
-}
-
-with open(output_file, "w", encoding="utf-8") as f:
     json.dump(graph, f, indent=2, ensure_ascii=False)
 
 # Kurze Zusammenfassung als maschinenlesbare Zeile
