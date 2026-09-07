@@ -3,7 +3,7 @@ import json
 import subprocess
 from pathlib import Path
 
-from app.models.schema_admin import UpdateResponse
+from app.models.schema_admin import UpdateStatusResponse
 
 last_update_status: dict = {
     "status": "not_started", "message": None, 
@@ -19,7 +19,7 @@ schedule_changed = asyncio.Event()
 update_lock = asyncio.Lock()
 
 # Update-Pipeline
-def run_update_process() -> UpdateResponse:
+def run_update_process() -> UpdateStatusResponse:
     global last_update_status
 
     last_update_status = {
