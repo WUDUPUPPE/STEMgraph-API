@@ -19,6 +19,9 @@ services:
       WRITE_TOKEN: "${WRITE_TOKEN}"
     ports:
       - "8000:8000"
+    volumes:
+      - ../challenges:/challenges
+      - ../data:/data:ro
     depends_on:
       - neo4j
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
