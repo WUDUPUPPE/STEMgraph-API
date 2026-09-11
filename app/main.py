@@ -3,12 +3,19 @@ from pydantic import BaseModel
 from contextlib import asynccontextmanager
 from app.api import graph, keywords, admin, list
 from app.service.task_scheduler import create_stop_event, start_scheduler, stop_scheduler
+from fastapi.middleware.cors import CORSMiddleware
 
 class HealthcheckResponse(BaseModel):
     status: str
     message: str
 
-app = FastAPI(title="STEMgraph API", version="2.1.0")
+app = FastAPI(title="STEMgraph API", version="2.2.0")
+
+app.add_middleware(
+    CORSMiddleware, 
+    allow_origins=["http://localhost:4200", "http://127.0.0.1:4200"], 
+    allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
+)
 
 app.include_router(graph.router)
 app.include_router(list.router)
