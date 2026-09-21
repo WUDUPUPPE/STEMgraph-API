@@ -24,11 +24,11 @@ def databasecheck() -> DatabasecheckResponse:
     try:
         run_query("RETURN 1 AS database_available")
         return DatabasecheckResponse(
-            status="ready", api="ok", database="ok", message="API an Neo4j-Database are available.")
+            status="online", message="Neo4j database is reachable")
         
     except Exception:
         return DatabasecheckResponse(
-            status="degraded", api="ok", database="unavailable", message="API is available, but the Database is unavailable")
+            status="offline", message="Neo4j database is unreachable")
 
 
 #API Update Status

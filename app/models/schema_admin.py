@@ -9,8 +9,6 @@ class HealthcheckResponse(BaseModel):
 #Database Status
 class DatabasecheckResponse(BaseModel):
     status: str
-    api: str
-    database: str
     message: str
 
 #Update Status Model
