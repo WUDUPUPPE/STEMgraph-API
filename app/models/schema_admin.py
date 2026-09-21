@@ -1,13 +1,20 @@
 from typing import Any
 from pydantic import BaseModel, Field
 
-#Status Model
+#Update Status Model
 class UpdateStatusResponse(BaseModel):
     status: str
     message: str | None = None
     fetch_stats: dict[str, Any] | None = None
     export_stats: dict[str, Any] | None = None
 
+#API & Data Status
+class DataApiStatusResponse(BaseModel):
+    status: str
+    api: str
+    database: str
+    message: str
+    
 #Read Schedule Model
 class ScheduleResponse(BaseModel):
     enabled: bool

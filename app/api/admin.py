@@ -1,7 +1,8 @@
 import os
 from fastapi import APIRouter, Header, HTTPException, BackgroundTasks
-from app.models.schema_admin import UpdateStatusResponse, ScheduleResponse, ScheduleRequest, ScheduleUpdateResponse, ManuallyStartResponse
+from app.models.schema_admin import UpdateStatusResponse, DataApiStatusResponse, ScheduleResponse, ScheduleRequest, ScheduleUpdateResponse, ManuallyStartResponse
 from app.service import task_scheduler
+from app.service.neo4j_client import run_query
 
 router = APIRouter()
 WRITE_TOKEN = os.getenv("WRITE_TOKEN")
@@ -10,21 +11,33 @@ def check_api_key(x_api_key: str) -> None:
     if x_api_key != WRITE_TOKEN:
         raise HTTPException(status_code=403,detail="Invalid API Key",)
 
-#Status
+#API-Script Status
 @router.get("/admin/update-status", tags=["Admin/Health Check"])
 def get_update_status(x_api_key: str = Header(...)) -> UpdateStatusResponse: 
     check_api_key(x_api_key)
     
-    return UpdateStatusResponse(task_scheduler.schedule_config
-    )
+    return UpdateStatusResponse(task_scheduler.schedule_config)
     
+#Data & Api-Status
+@router.get("/admin/data-api-status", tags=["Admin/Health Check"])
+def get_data_api_status(x_api_key: str = Header(...)) -> DataApiStatusResponse:
+    check_api_key(x_api_key)
+    
+    try:
+        run_query("RETURN 1 AS database_available")
+        return DataApiStatusResponse(
+            status="ready", api="ok", database="ok", message="API an Neo4j-Database are available.")
+        
+    except Exception:
+        return DataApiStatusResponse(
+            status="degraded", api="ok", database="unavailable", message="API is available, but the Database is unavailable")
+
 #Read Schedule
-@router.get("/admin/schedule",tags=["Admin/Health Check"])
+@router.get("/admin/schedule", tags=["Admin/Health Check"])
 def get_schedule(x_api_key: str = Header(...)) -> ScheduleResponse:
     check_api_key(x_api_key)
 
-    return ScheduleResponse(task_scheduler.schedule_config
-    )
+    return ScheduleResponse(task_scheduler.schedule_config)
     
 #Update Schedule
 @router.put("/admin/schedule",tags=["Admin/Health Check"])
@@ -39,8 +52,7 @@ def update_schedule(schedule: ScheduleRequest, x_api_key: str = Header(...)) -> 
     return ScheduleUpdateResponse(
         status= "ok", 
         message = "Schedule updated", 
-        schedule = ScheduleUpdateResponse(task_scheduler.schedule_config)
-    )
+        schedule = ScheduleUpdateResponse(task_scheduler.schedule_config))
 
 #Manuel Update
 @router.post("/admin/update-challenges", tags=["Admin/Health Check"])
@@ -50,12 +62,10 @@ async def admin_update_challenges(background_tasks: BackgroundTasks, x_api_key: 
         
         return ManuallyStartResponse(
             status = "already_running", 
-            message = "An update is already running",
-        )
+            message = "An update is already running")
         
     background_tasks.add_task(task_scheduler.execute_update,)
 
     return ManuallyStartResponse(
         status = "started",
-        message = "Challenge update started",
-    )
+        message = "Challenge update started")
