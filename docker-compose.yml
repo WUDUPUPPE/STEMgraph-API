@@ -43,7 +43,7 @@ services:
       - "8000:8000"
     volumes:
       - ../challenges:/challenges
-      - ../data:/data:ro
+      - ../data:/data
     depends_on:
       - neo4j
       - postgres
