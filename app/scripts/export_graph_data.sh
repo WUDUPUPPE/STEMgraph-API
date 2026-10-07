@@ -90,6 +90,9 @@ def extract_meta_json(readme_path: str):
 # Liste aller Knoten für graph-data.json
 nodes = []
 
+# Liste aller Kanten für graph-data.json
+edges = []
+
 # Set, damit ich jede id nur einmal als Node eintrage
 seen_ids = set()
 
