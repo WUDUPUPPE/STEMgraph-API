@@ -5,7 +5,7 @@ from app.api import graph, keywords, admin, list, content
 from app.service.task_scheduler import create_stop_event, start_scheduler, stop_scheduler
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="STEMgraph API", version="2.5.0")
+app = FastAPI(title="STEMgraph API", version="2.7.0")
 
 app.add_middleware(
     CORSMiddleware, 
