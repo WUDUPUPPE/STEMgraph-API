@@ -13,7 +13,6 @@ class AssetResponse(BaseModel):
 class ChallengeContentResponse(BaseModel):
     id: str
     content_markdown: str
-    source_path: str
     source_commit: str | None
     imported_at: datetime
     assets: list[AssetResponse]

@@ -1,5 +1,5 @@
 readme_query = """
-SELECT challenge_id AS is, content_markdown, source_path, source_commit,  imported_at
+SELECT challenge_id AS is, content_markdown, source_commit,  imported_at
 FROM readmes
 WHERE challenge_id = %s
 """

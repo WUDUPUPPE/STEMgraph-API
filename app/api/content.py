@@ -20,9 +20,8 @@ def get_challenge_content(id: str) -> ChallengeContentResponse:
     return ChallengeContentResponse(
         id=str(readme[0]),
         content_markdown=readme[1],
-        source_path=readme[2],
-        source_commit=readme[3],
-        imported_at=readme[4],
+        source_commit=readme[2],
+        imported_at=readme[3],
         assets=[
             AssetResponse(
                 id=asset[0],
