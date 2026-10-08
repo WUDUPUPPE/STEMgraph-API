@@ -6,7 +6,7 @@ from app.service.postgres_client import run_query
 
 router = APIRouter()
 
-@router.get("/challenges/{challenge_id}/content", tags=["Challenge-Content"])
+@router.get("/challenges/{challenge_id}/content", tags=["Content-Info"])
 def get_challenge_content(challenge_id: str) -> ChallengeContentResponse:
     readme = run_query(readme_query, (challenge_id,), fetch="one")
 
@@ -35,7 +35,7 @@ def get_challenge_content(challenge_id: str) -> ChallengeContentResponse:
     )
 
 
-@router.get("/challenges/{challenge_id}/assets/{asset_id}", tags=["Challenge-Content"])
+@router.get("/challenges/{challenge_id}/assets/{asset_id}", tags=["Content-Info"])
 def download_asset(challenge_id: str, asset_id: int):
     asset = run_query(asset_content_query, (asset_id, challenge_id), fetch="one")
 

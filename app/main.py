@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from contextlib import asynccontextmanager
-from app.api import graph, keywords, admin, list
+from app.api import graph, keywords, admin, list, content
 from app.service.task_scheduler import create_stop_event, start_scheduler, stop_scheduler
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,6 +17,7 @@ app.include_router(graph.router)
 app.include_router(list.router)
 app.include_router(keywords.router)
 app.include_router(admin.router)
+app.include_router(content.router)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
