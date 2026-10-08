@@ -11,7 +11,7 @@ class AssetResponse(BaseModel):
 
 
 class ChallengeContentResponse(BaseModel):
-    challenge_id: str
+    id: str
     content_markdown: str
     source_path: str
     source_commit: str | None

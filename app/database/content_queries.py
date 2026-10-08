@@ -1,5 +1,5 @@
 readme_query = """
-SELECT challenge_id, content_markdown, source_path, source_commit,  imported_at
+SELECT challenge_id AS is, content_markdown, source_path, source_commit,  imported_at
 FROM readmes
 WHERE challenge_id = %s
 """
@@ -16,6 +16,7 @@ ORDER BY relative_path
 asset_content_query = """
 SELECT content, file_name, mime_type
 FROM assets
-WHERE id = %s
-  AND challenge_id = %s
+WHERE challenge_id = %s
+  AND file_name = %s
+LIMIT 1
 """
