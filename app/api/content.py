@@ -13,7 +13,7 @@ def get_challenge_content(id: str) -> ChallengeContentResponse:
 
     if readme is None:
         raise HTTPException(
-            status_code=404, detail="README not Found")
+            status_code=404, detail="README not found")
 
     assets = run_query(assets_query, (id,), fetch="all")
 
@@ -41,7 +41,7 @@ def download_asset(id: str, file_name: str):
 
     if asset is None:
         raise HTTPException(
-            status_code=404, detail="Asset für diese Challenge nicht gefunden")
+            status_code=404, detail="Asset not found")
 
     content, name, mime_type = asset
 

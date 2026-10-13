@@ -29,9 +29,9 @@ def run_update_process() -> UpdateStatusResponse:
     }
     try:
         subprocess.run(["bash", "app/scripts/get_all_challenges.sh"], check=True)
+        subprocess.run(["bash", "app/scripts/load_postgres.sh"], check=True)
         subprocess.run(["bash", "app/scripts/export_graph_data.sh"], check=True)
         subprocess.run(["bash", "app/scripts/load_neo4j.sh"], check=True)
-        subprocess.run(["bash", "app/scripts/load_postgres.sh"], check=True)
 
     except subprocess.CalledProcessError as error:
         last_update_status = {
@@ -66,7 +66,7 @@ def run_update_process() -> UpdateStatusResponse:
         "export_stats": export_stats,
     }
 
-    return UpdateResponse(
+    return UpdateStatusResponse(
         status="ok", message=("Challenges updated, Graph exported and Neo4j loaded"),
         fetch_stats=fetch_stats,
         export_stats=export_stats,
