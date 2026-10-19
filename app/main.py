@@ -9,7 +9,7 @@ app = FastAPI(title="STEMgraph API", version="2.7.0")
 
 app.add_middleware(
     CORSMiddleware, 
-    allow_origins=["http://localhost:4200", "http://127.0.0.1:4200", "http://172.20.10.2:4200"], 
+    allow_origins=["http://localhost:4200", "http://192.168.178.28:4200"], 
     allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
 )
 
