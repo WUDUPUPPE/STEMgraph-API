@@ -6,8 +6,8 @@ from pathlib import Path
 from app.models.schema_admin import UpdateStatusResponse
 
 last_update_status: dict = {
-    "status": "not_started", "message": None, 
-    "fetch_stats": None, 
+    "status": "not_started", "message": None,
+    "fetch_stats": None,
     "export_stats": None,
 }
 
@@ -23,8 +23,8 @@ def run_update_process() -> UpdateStatusResponse:
     global last_update_status
 
     last_update_status = {
-        "status": "running", "message": "Update process is running", 
-        "fetch_stats": None, 
+        "status": "running", "message": "Update process is running",
+        "fetch_stats": None,
         "export_stats": None,
     }
     try:
@@ -33,10 +33,12 @@ def run_update_process() -> UpdateStatusResponse:
         subprocess.run(["bash", "app/scripts/export_graph_data.sh"], check=True)
         subprocess.run(["bash", "app/scripts/load_neo4j.sh"], check=True)
 
-    except subprocess.CalledProcessError as error:
+    # Exception statt nur CalledProcessError: sonst bleibt der Status bei
+    # jedem anderen Fehler (z. B. Skript nicht gefunden) für immer auf "running"
+    except Exception as error:
         last_update_status = {
-            "status": "failed", "message": f"Update process failed: {error}", 
-            "fetch_stats": None, 
+            "status": "failed", "message": f"Update process failed: {error}",
+            "fetch_stats": None,
             "export_stats": None,
         }
 
